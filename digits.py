@@ -15,16 +15,18 @@ def validate_arguments():
     return False
 
 
-def image_extract(file):
+def file_formating(file):
     f = open(file, 'r')
     f = file_scrap(f)
 
+    return f
+
+def image_objecify(file):
     images = []
     for x in range(1000):
-        images.append(Image(f.readline()))
+        images.append(Image(file.readline()))
 
     return images
-
 
 def file_scrap(file):
     for x in range(3):
@@ -39,9 +41,11 @@ if __name__ == '__main__':
         sys.exit()
 
     # Extract images
-    images = image_extract(sys.argv[1])
+    f = file_formating(sys.argv[1])
 
     # Make image objects for all data
+    images = image_objecify(f)
+
 
     print('Neural Network')
 
