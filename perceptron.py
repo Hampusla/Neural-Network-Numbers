@@ -2,7 +2,7 @@ import numpy as np
 import math
 
 
-class Network:
+class Perceptron:
 
     def __init__(self, input_size):
         self.weights = np.random(1, input_size)
