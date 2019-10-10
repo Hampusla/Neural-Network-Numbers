@@ -17,7 +17,7 @@ class Perceptron:
         return out
 
     def tune(self, tunes):
-        return 1
+        self.weights = np.add(self.weights, tunes)
 
     def __sigmoid(self, x):
         return 1 / (1 + math.exp(-x))
