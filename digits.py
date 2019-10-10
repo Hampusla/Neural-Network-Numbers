@@ -34,6 +34,11 @@ def file_scrap(file):
 
     return file
 
+def label_adding(images, file):
+
+    for x in images:
+        x.add_label(file.readline())
+
 
 if __name__ == '__main__':
 
@@ -47,8 +52,10 @@ if __name__ == '__main__':
     images = image_objecify(f)
 
     # Open label file
+    l = file_formating(sys.argv[2])
 
     # Add labels to all images
+    label_adding(images, l)
 
     # Split images in two sets
 
