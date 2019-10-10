@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 from image import Image
+from perceptron import Perceptron
 
 
 def validate_arguments():
@@ -46,6 +47,15 @@ def split_images(images, size):
     np.random.shuffle(images)
     return np.split(images, [indice, 1000])
 
+
+def init_network(input_size):
+    return {
+        '4': Perceptron(input_size),
+        '7': Perceptron(input_size),
+        '8': Perceptron(input_size),
+        '9': Perceptron(input_size),
+    }
+
 if __name__ == '__main__':
 
     if validate_arguments():
@@ -77,6 +87,7 @@ if __name__ == '__main__':
     sets = split_images(images, test_size)
 
     # Initiate perceptrons
+    network = init_network(pixel_size)
 
     print('Neural Network')
 
