@@ -26,7 +26,7 @@ def image_objecify(file):
     for x in range(1000):
         images.append(Image(file.readline()))
 
-    return images
+    return np.array(images)
 
 def file_scrap(file):
     for x in range(3):
@@ -48,11 +48,12 @@ if __name__ == '__main__':
     # Extract images
     f = file_formating(sys.argv[1])
 
-    # Close file reader
-    f.close()
 
     # Make image objects for all data
     images = image_objecify(f)
+
+    # Close file reader
+    f.close()
 
     # Open label file
     l = file_formating(sys.argv[2])
