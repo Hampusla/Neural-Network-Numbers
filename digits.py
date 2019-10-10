@@ -54,6 +54,8 @@ if __name__ == '__main__':
     # Extract images
     f = file_formating(sys.argv[1])
 
+    #Set size of pictures
+    pixel_size = 784
 
     # Make image objects for all data
     images = image_objecify(f)
