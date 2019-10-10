@@ -48,6 +48,9 @@ if __name__ == '__main__':
     # Extract images
     f = file_formating(sys.argv[1])
 
+    # Close file reader
+    f.close()
+
     # Make image objects for all data
     images = image_objecify(f)
 
@@ -56,6 +59,9 @@ if __name__ == '__main__':
 
     # Add labels to all images
     label_adding(images, l)
+
+    # Close file reader
+    l.close()
 
     # Split images in two sets
 
