@@ -25,7 +25,7 @@ def file_formating(file):
 def image_objecify(file):
     images = []
     for x in range(1000):
-        images.append(Image(file.readline()))
+        images.append(Image(file.readline().rstrip()))
 
     return np.array(images)
 
@@ -56,10 +56,16 @@ def init_network(input_size):
         '9': Perceptron(input_size),
     }
 
-def process_train_image(perceptron, image, number):
+def training_cycle(images, network, alpha):
+
+    for i in images:
+        for p in network:
+            process_train_image(network[p], i, int(p), alpha)
+
+def process_train_image(perceptron, image, number, alpha):
     out = perceptron.activation(image.array)
     err = calc_error(number, image.label,out)
-    perceptron.tune(create_tunes(image.array, out, err))
+    perceptron.tune(create_tunes(image.array, alpha, err))
 
 
 def calc_error(num, image_num,guess):
@@ -68,12 +74,14 @@ def calc_error(num, image_num,guess):
     else:
         return -1-guess
 
-def create_tunes(inputs, output, error):
+def create_tunes(inputs, alpha, error):
     tunes = np.empty(inputs.size)
 
-    for t in tunes:
-        tune = output * error * inputs[t]
-        np.put(tunes, t, tune)
+    for i, t in np.ndenumerate(tunes):
+        tune = alpha * error * inputs[i]
+        np.put(tunes, i, tune)
+
+    return tunes
 
 if __name__ == '__main__':
 
@@ -108,17 +116,19 @@ if __name__ == '__main__':
     # Initiate perceptrons
     network = init_network(pixel_size)
 
-    print('Neural Network')
-
+    alpha = 0.01
     #Train
     # - Input
     # - Calc error
     # - next
+    training_cycle(images, network, alpha)
 
     #Test
     # - Input
     # - Save error
     # - next
+
+    print('Neural Network')
 
     # train a network of perceptrons (no hidde layers) with the help of patterns (images) and answers (labels)
     # – classify a test set of patterns and return the classifications

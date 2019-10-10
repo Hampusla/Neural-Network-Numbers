@@ -5,7 +5,7 @@ import math
 class Perceptron:
 
     def __init__(self, input_size):
-        self.weights = np.random(1, input_size)
+        self.weights = np.random.random(input_size)
 
     def activation(self, inputs):
         # Dot product
@@ -20,4 +20,4 @@ class Perceptron:
         self.weights = np.add(self.weights, tunes)
 
     def __sigmoid(self, x):
-        return 1 / (1 + math.exp(-x))
+        return (2 / (1 + math.exp(-x))) - 1
