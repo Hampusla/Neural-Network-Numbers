@@ -56,6 +56,25 @@ def init_network(input_size):
         '9': Perceptron(input_size),
     }
 
+def process_train_image(perceptron, image, number):
+    out = perceptron.activation(image.array)
+    err = calc_error(number, image.label,out)
+    perceptron.tune(create_tunes(image.array, out, err))
+
+
+def calc_error(num, image_num,guess):
+    if num == image_num:
+        return 1-guess
+    else:
+        return -1-guess
+
+def create_tunes(inputs, output, error):
+    tunes = np.empty(inputs.size)
+
+    for t in tunes:
+        tune = output * error * inputs[t]
+        np.put(tunes, t, tune)
+
 if __name__ == '__main__':
 
     if validate_arguments():
