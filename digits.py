@@ -91,6 +91,16 @@ if __name__ == '__main__':
 
     print('Neural Network')
 
+    #Train
+    # - Input
+    # - Calc error
+    # - next
+
+    #Test
+    # - Input
+    # - Save error
+    # - next
+
     # train a network of perceptrons (no hidde layers) with the help of patterns (images) and answers (labels)
     # – classify a test set of patterns and return the classifications
     # – The input patterns are stored in a training image file
