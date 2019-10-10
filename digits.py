@@ -46,6 +46,14 @@ if __name__ == '__main__':
     # Make image objects for all data
     images = image_objecify(f)
 
+    # Open label file
+
+    # Add labels to all images
+
+    # Split images in two sets
+
+    # Initiate perceptrons
+
 
     print('Neural Network')
 
