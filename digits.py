@@ -40,6 +40,12 @@ def label_adding(images, file):
         x.add_label(file.readline())
 
 
+def split_images(images, size):
+    indice = int(1000*size)
+
+    np.random.shuffle(images)
+    return np.split(images, [indice, 1000])
+
 if __name__ == '__main__':
 
     if validate_arguments():
@@ -65,9 +71,10 @@ if __name__ == '__main__':
     l.close()
 
     # Split images in two sets
+    test_size = 0.25
+    sets = split_images(images, test_size)
 
     # Initiate perceptrons
-
 
     print('Neural Network')
 
