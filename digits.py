@@ -89,7 +89,7 @@ def test_cycle(images, network):
     #Get average of error
     for i in images:
         for p in network:
-            abs_err = abs(process_test_image(network[p], i, int(p)))
+            abs_err = abs_err + abs(process_test_image(network[p], i, int(p)))
 
     return abs_err
 def process_test_image(perceptron, image, number):
@@ -131,14 +131,17 @@ if __name__ == '__main__':
 
     # Initiate perceptrons
     network = init_network(pixel_size)
+    print('setup done')
 
     alpha = 0.01
-    goal = 0.5
+    goal = 1
+    err = goal + 1
     #Train
     # - Input
     # - Calc error
     # - next
     while goal_reached(goal, err):
+        print('start training')
         training_cycle(sets[1], network, alpha)
 
         # Test
@@ -146,6 +149,7 @@ if __name__ == '__main__':
         # - Save error
         # - next
         err = test_cycle(sets[0], network)
+        print('cycle done')
 
 
     print('Neural Network')
