@@ -2,6 +2,7 @@ import sys
 import numpy as np
 from image import Image
 from perceptron import Perceptron
+import operator
 
 
 def validate_arguments():
@@ -108,10 +109,29 @@ def process_test_image(perceptron, image, number):
 def goal_reached(goal, err):
     return (goal < err)
 
+def file_creation(name, out):
+    f = open(name, 'w')
+
+    for s in out:
+        f.write(str(s) + '\n')
+
+    return f
 
 def validate_numbers(network, images):
-    out = ""
+    out = []
     #For each image
+
+    for i in images:
+        numb = {
+            4:0,
+            7:0,
+            8:0,
+            9:0
+        }
+        for p in network:
+            numb[int(p)] = network[p].activation(i.array)
+
+        out.append((max(numb.items(), key=operator.itemgetter(1))[0]))
         #Classify by perceptrons
         #write best perceptron number
 
@@ -180,8 +200,11 @@ if __name__ == '__main__':
 
     # validate
     out = validate_numbers(network, validate_images)
-        #Activation
-        # Choose best
+
+    results = file_creation('results.txt', out)
+    results.close()
+
+    print(out)
 
     # train a network of perceptrons (no hidde layers) with the help of patterns (images) and answers (labels)
     # – classify a test set of patterns and return the classifications
