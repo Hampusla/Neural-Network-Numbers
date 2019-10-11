@@ -58,9 +58,16 @@ def init_network(input_size):
 
 def training_cycle(images, network, alpha):
     np.random.shuffle(images)
-    for i in images:
+    for i in images.flat:
         for p in network:
             process_train_image(network[p], i, int(p), alpha)
+    # vfunc = np.vectorize(func)
+    # vfunc(images, network, alpha)
+
+
+def func(image, network, alpha):
+    for p in network:
+        process_train_image(network[p], image, int(p), alpha)
 
 def process_train_image(perceptron, image, number, alpha):
     out = perceptron.activation(image.array)
@@ -87,7 +94,7 @@ def test_cycle(images, network):
     #Add all errors together for each perceptron
     abs_err = 0
     #Get average of error
-    for i in images:
+    for i in images.flat:
         for p in network:
             abs_err = abs_err + abs(process_test_image(network[p], i, int(p)))
 
@@ -134,7 +141,7 @@ if __name__ == '__main__':
     print('setup done')
 
     alpha = 0.01
-    goal = 1
+    goal = 10
     err = goal + 1
     #Train
     # - Input
