@@ -152,17 +152,17 @@ if __name__ == '__main__':
     # - Input
     # - Calc error
     # - next
-    # while goal_reached(goal, err):
-    print('start training')
-    training_cycle(sets[1], network, alpha)
+    while goal_reached(goal, err):
+        print('start training')
+        training_cycle(sets[1], network, alpha)
 
-    # Test
-    # - Input
-    # - Save error
-    # - next
-    print('start testing')
-    err = test_cycle(sets[0], network)
-    print('cycle done')
+        # Test
+        # - Input
+        # - Save error
+        # - next
+        print('start testing')
+        err = test_cycle(sets[0], network)
+        print('cycle done')
 
 
     print('Neural Network')
