@@ -82,13 +82,18 @@ def calc_error(num, image_num,guess):
         return -1-guess
 
 def create_tunes(inputs, alpha, error):
-    tunes = np.empty(inputs.size)
+    # tunes = np.empty(inputs.size)
 
-    for i, t in np.ndenumerate(tunes):
-        tune = alpha * error * inputs[i]
-        np.put(tunes, i, tune)
+    # for i in np.ndenumerate(tunes):
+    #     #     tune = alpha * error * inputs[i]
+    #     #     np.put(tunes, i, tune)
+    vfunc = np.vectorize(tune_func)
+    tunes = vfunc(inputs, alpha, error)
 
     return tunes
+
+def tune_func(input, alpha, error):
+    return alpha * error * input
 
 def test_cycle(images, network):
     #Add all errors together for each perceptron
@@ -147,17 +152,17 @@ if __name__ == '__main__':
     # - Input
     # - Calc error
     # - next
-    while goal_reached(goal, err):
-        print('start training')
-        training_cycle(sets[1], network, alpha)
+    # while goal_reached(goal, err):
+    print('start training')
+    training_cycle(sets[1], network, alpha)
 
-        # Test
-        # - Input
-        # - Save error
-        # - next
-        print('start testing')
-        err = test_cycle(sets[0], network)
-        print('cycle done')
+    # Test
+    # - Input
+    # - Save error
+    # - next
+    print('start testing')
+    err = test_cycle(sets[0], network)
+    print('cycle done')
 
 
     print('Neural Network')
