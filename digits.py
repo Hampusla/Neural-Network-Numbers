@@ -57,7 +57,7 @@ def init_network(input_size):
     }
 
 def training_cycle(images, network, alpha):
-
+    np.random.shuffle(images)
     for i in images:
         for p in network:
             process_train_image(network[p], i, int(p), alpha)
@@ -148,6 +148,7 @@ if __name__ == '__main__':
         # - Input
         # - Save error
         # - next
+        print('start testing')
         err = test_cycle(sets[0], network)
         print('cycle done')
 
