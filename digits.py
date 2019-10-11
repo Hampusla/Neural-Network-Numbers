@@ -85,8 +85,19 @@ def create_tunes(inputs, alpha, error):
 
 def test_cycle(images, network):
     #Add all errors together for each perceptron
+    abs_err = 0
     #Get average of error
+    for i in images:
+        for p in network:
+            abs_err = abs(process_test_image(network[p], i, int(p)))
 
+    return abs_err
+def process_test_image(perceptron, image, number):
+    out = perceptron.activation(image.array)
+    return calc_error(number, image.label, out)
+
+def goal_reached(goal, err):
+    return (goal < err)
 
 if __name__ == '__main__':
 
@@ -122,18 +133,20 @@ if __name__ == '__main__':
     network = init_network(pixel_size)
 
     alpha = 0.01
+    goal = 0.5
     #Train
     # - Input
     # - Calc error
     # - next
-    training_cycle(sets[1], network, alpha)
+    while goal_reached(goal, err):
+        training_cycle(sets[1], network, alpha)
 
-    test_cycle(sets[0], network)
+        # Test
+        # - Input
+        # - Save error
+        # - next
+        err = test_cycle(sets[0], network)
 
-    #Test
-    # - Input
-    # - Save error
-    # - next
 
     print('Neural Network')
 
