@@ -83,6 +83,11 @@ def create_tunes(inputs, alpha, error):
 
     return tunes
 
+def test_cycle(images, network):
+    #Add all errors together for each perceptron
+    #Get average of error
+
+
 if __name__ == '__main__':
 
     if validate_arguments():
@@ -121,7 +126,9 @@ if __name__ == '__main__':
     # - Input
     # - Calc error
     # - next
-    training_cycle(images, network, alpha)
+    training_cycle(sets[1], network, alpha)
+
+    test_cycle(sets[0], network)
 
     #Test
     # - Input
