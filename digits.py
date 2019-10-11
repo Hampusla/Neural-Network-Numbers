@@ -108,6 +108,15 @@ def process_test_image(perceptron, image, number):
 def goal_reached(goal, err):
     return (goal < err)
 
+
+def validate_numbers(network, images):
+    out = ""
+    #For each image
+        #Classify by perceptrons
+        #write best perceptron number
+
+    return out
+
 if __name__ == '__main__':
 
     if validate_arguments():
@@ -163,10 +172,14 @@ if __name__ == '__main__':
 
 
     print('Neural Network')
-
     #Import validating
+    vf = file_formating(sys.argv[3])
+
     # Input to images
+    validate_images = image_objecify(vf)
+
     # validate
+    out = validate_numbers(network, validate_images)
         #Activation
         # Choose best
 
