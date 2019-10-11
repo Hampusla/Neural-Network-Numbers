@@ -164,6 +164,12 @@ if __name__ == '__main__':
 
     print('Neural Network')
 
+    #Import validating
+    # Input to images
+    # validate
+        #Activation
+        # Choose best
+
     # train a network of perceptrons (no hidde layers) with the help of patterns (images) and answers (labels)
     # – classify a test set of patterns and return the classifications
     # – The input patterns are stored in a training image file
