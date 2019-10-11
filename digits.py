@@ -87,13 +87,10 @@ def create_tunes(inputs, alpha, error):
     # for i in np.ndenumerate(tunes):
     #     #     tune = alpha * error * inputs[i]
     #     #     np.put(tunes, i, tune)
-    vfunc = np.vectorize(tune_func)
+    vfunc = np.vectorize(lambda i, a, e: i*a*e)
     tunes = vfunc(inputs, alpha, error)
 
     return tunes
-
-def tune_func(input, alpha, error):
-    return alpha * error * input
 
 def test_cycle(images, network):
     #Add all errors together for each perceptron
