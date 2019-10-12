@@ -88,10 +88,10 @@ def create_tunes(inputs, alpha, error):
     # for i in np.ndenumerate(tunes):
     #     #     tune = alpha * error * inputs[i]
     #     #     np.put(tunes, i, tune)
-    vfunc = np.vectorize(lambda i, a, e: i*a*e)
-    tunes = vfunc(inputs, alpha, error)
+    # vfunc = np.vectorize(lambda i, a, e: i*a*e)
+    # tunes = vfunc(inputs, alpha, error)
 
-    return tunes
+    return list(map(lambda i: i*alpha*error, inputs))
 
 def test_cycle(images, network):
     #Add all errors together for each perceptron
@@ -172,26 +172,25 @@ if __name__ == '__main__':
     print('setup done')
 
     alpha = 0.01
-    goal = 10
+    goal = 1
     err = goal + 1
     #Train
     # - Input
     # - Calc error
     # - next
+    it = 0
     while goal_reached(goal, err):
-        print('start training')
         training_cycle(sets[1], network, alpha)
 
         # Test
         # - Input
         # - Save error
         # - next
-        print('start testing')
         err = test_cycle(sets[0], network)
-        print('cycle done')
+        it += 1
 
 
-    print('Neural Network')
+    print(it)
     #Import validating
     vf = file_formating(sys.argv[3])
 
