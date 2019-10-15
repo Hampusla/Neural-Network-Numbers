@@ -78,7 +78,7 @@ def calc_error(num, image_num,guess):
 
 
 def create_tunes(inputs, alpha, error):
-    return np.multiply(np.multiply(inputs, np.full(inputs.size, alpha)), np.full(inputs.size, error))
+    return [(alpha*error), (np.multiply(np.multiply(inputs, np.full(inputs.size, alpha)), np.full(inputs.size, error)))]
 
 
 def test_cycle(images, network):
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     #Set Parameters for training
     pixel_size = 784
     test_size = 0.20
-    alpha = 0.001
+    alpha = 0.01
     goal = 10
 
     # Extract training images
