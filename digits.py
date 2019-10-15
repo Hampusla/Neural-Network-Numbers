@@ -17,18 +17,14 @@ def validate_arguments():
     return False
 
 
-def file_formating(file):
+def file_formatting(file):
     f = open(file, 'r')
-    f = file_scrap(f)
 
-    return f
+    return file_scrap(f)
+
 
 def image_objecify(file):
-    images = []
-    for x in range(1000):
-        images.append(Image(file.readline().rstrip()))
-
-    return np.array(images)
+    return np.array([Image(file.readline().rstrip()) for i in range(1000)])
 
 def file_scrap(file):
     for x in range(3):
@@ -37,9 +33,7 @@ def file_scrap(file):
     return file
 
 def label_adding(images, file):
-
-    for x in images:
-        x.add_label(file.readline())
+    [image.add_label(file.readline()) for image in images]
 
 
 def split_images(images, size):
@@ -72,7 +66,7 @@ def func(image, network, alpha):
 
 def process_train_image(perceptron, image, number, alpha):
     out = perceptron.activation(image.array)
-    err = calc_error(number, image.label,out)
+    err = calc_error(number, image.label, out)
     perceptron.tune(create_tunes(image.array, alpha, err))
 
 
@@ -82,32 +76,28 @@ def calc_error(num, image_num,guess):
     else:
         return -1-guess
 
+
 def create_tunes(inputs, alpha, error):
-    # tunes = np.empty(inputs.size)
+    return np.multiply(np.multiply(inputs, np.full(inputs.size, alpha)), np.full(inputs.size, error))
 
-    # for i in np.ndenumerate(tunes):
-    #     #     tune = alpha * error * inputs[i]
-    #     #     np.put(tunes, i, tune)
-    # vfunc = np.vectorize(lambda i, a, e: i*a*e)
-    # tunes = vfunc(inputs, alpha, error)
-
-    return list(map(lambda i: i*alpha*error, inputs))
 
 def test_cycle(images, network):
-    #Add all errors together for each perceptron
     abs_err = 0
-    #Get average of error
     for i in images.flat:
         for p in network:
             abs_err = abs_err + abs(process_test_image(network[p], i, int(p)))
 
     return abs_err
+
+
 def process_test_image(perceptron, image, number):
     out = perceptron.activation(image.array)
     return calc_error(number, image.label, out)
 
+
 def goal_reached(goal, err):
     return (goal < err)
+
 
 def file_creation(name, out):
     f = open(name, 'w')
@@ -117,24 +107,22 @@ def file_creation(name, out):
 
     return f
 
+
 def validate_numbers(network, images):
     out = []
-    #For each image
 
     for i in images:
         numb = {
-            4:0,
-            7:0,
-            8:0,
-            9:0
+            4: 0,
+            7: 0,
+            8: 0,
+            9: 0
         }
+
         for p in network:
             numb[int(p)] = network[p].activation(i.array)
 
         out.append((max(numb.items(), key=operator.itemgetter(1))[0]))
-        #Classify by perceptrons
-        #write best perceptron number
-
     return out
 
 if __name__ == '__main__':
@@ -144,12 +132,12 @@ if __name__ == '__main__':
 
     #Set Parameters for training
     pixel_size = 784
-    test_size = 0.25
-    alpha = 0.01
-    goal = 1
+    test_size = 0.20
+    alpha = 0.001
+    goal = 10
 
     # Extract training images
-    f = file_formating(sys.argv[1])
+    f = file_formatting(sys.argv[1])
 
     # Make image objects for all data
     images = image_objecify(f)
@@ -158,7 +146,7 @@ if __name__ == '__main__':
     f.close()
 
     # Open label file
-    l = file_formating(sys.argv[2])
+    l = file_formatting(sys.argv[2])
 
     # Add labels to all images
     label_adding(images, l)
@@ -185,7 +173,7 @@ if __name__ == '__main__':
     print(iterations)
 
     # Import validating data
-    vf = file_formating(sys.argv[3])
+    vf = file_formatting(sys.argv[3])
 
     # Input to image objects
     validate_images = image_objecify(vf)
