@@ -142,11 +142,14 @@ if __name__ == '__main__':
     if validate_arguments():
         sys.exit()
 
-    # Extract images
-    f = file_formating(sys.argv[1])
-
-    #Set size of pictures
+    #Set Parameters for training
     pixel_size = 784
+    test_size = 0.25
+    alpha = 0.01
+    goal = 1
+
+    # Extract training images
+    f = file_formating(sys.argv[1])
 
     # Make image objects for all data
     images = image_objecify(f)
@@ -164,50 +167,32 @@ if __name__ == '__main__':
     l.close()
 
     # Split images in two sets
-    test_size = 0.25
     sets = split_images(images, test_size)
 
     # Initiate perceptrons
     network = init_network(pixel_size)
+
     print('setup done')
 
-    alpha = 0.01
-    goal = 1
+    # Iterate training until goal is achieved
     err = goal + 1
-    #Train
-    # - Input
-    # - Calc error
-    # - next
-    it = 0
+    iterations = 0
     while goal_reached(goal, err):
         training_cycle(sets[1], network, alpha)
-
-        # Test
-        # - Input
-        # - Save error
-        # - next
         err = test_cycle(sets[0], network)
-        it += 1
+        iterations += 1
 
+    print(iterations)
 
-    print(it)
-    #Import validating
+    # Import validating data
     vf = file_formating(sys.argv[3])
 
-    # Input to images
+    # Input to image objects
     validate_images = image_objecify(vf)
 
-    # validate
+    # Run a validation cycle
     out = validate_numbers(network, validate_images)
 
-    results = file_creation('results.txt', out)
-    results.close()
-
+    # Put answers in a file and then print it
+    file_creation('results.txt', out).close()
     print(out)
-
-    # train a network of perceptrons (no hidde layers) with the help of patterns (images) and answers (labels)
-    # – classify a test set of patterns and return the classifications
-    # – The input patterns are stored in a training image file
-    # – The correct classifications for these are stored in a training label file
-    # – The patterns you should classify are stored in a validation image file – consists of new images
-    # – The answers we use to check your result is called the validation label file
