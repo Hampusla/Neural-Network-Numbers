@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from image import Image
-from perceptron import Perceptron
+from per import Perceptron
 import operator
 
 
@@ -39,7 +39,7 @@ def label_adding(images, file):
 def split_images(images, size):
     indice = int(1000*size)
 
-    np.random.shuffle(images)
+    # np.random.shuffle(images)
     return np.split(images, [indice, 1000])
 
 
@@ -52,12 +52,10 @@ def init_network(input_size):
     }
 
 def training_cycle(images, network, alpha):
-    np.random.shuffle(images)
-    for i in images.flat:
-        for p in network:
-            process_train_image(network[p], i, int(p), alpha)
-    # vfunc = np.vectorize(func)
-    # vfunc(images, network, alpha)
+    # np.random.shuffle(images)
+    # for i in images.flat:
+    for p in network:
+        process_train_image(network[p], images[0], int(p), alpha)
 
 
 def func(image, network, alpha):
@@ -92,7 +90,7 @@ def test_cycle(images, network):
 
 def process_test_image(perceptron, image, number):
     out = perceptron.activation(image.array)
-    return calc_error(number, image.label, out)
+    return calc_error(number, int(image.label), out)
 
 
 def goal_reached(goal, err):
@@ -133,7 +131,7 @@ if __name__ == '__main__':
     #Set Parameters for training
     pixel_size = 784
     test_size = 0.20
-    alpha = 0.5
+    alpha = 0.01
     goal = 300
 
     # Extract training images
