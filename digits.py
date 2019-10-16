@@ -52,10 +52,10 @@ def init_network(input_size):
     }
 
 def training_cycle(images, network, alpha):
-    # np.random.shuffle(images)
-    # for i in images.flat:
-    for p in network:
-        process_train_image(network[p], images[0], int(p), alpha)
+    np.random.shuffle(images)
+    for i in images.flat:
+        for p in network:
+            process_train_image(network[p], i, int(p), alpha)
 
 
 def func(image, network, alpha):
@@ -94,7 +94,7 @@ def process_test_image(perceptron, image, number):
 
 
 def goal_reached(goal, err):
-    return (goal < err)
+    return goal > err
 
 
 def file_creation(name, out):
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     #Set Parameters for training
     pixel_size = 784
     test_size = 0.20
-    alpha = 0.01
+    alpha = 0.1
     goal = 300
 
     # Extract training images
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     # Iterate training until goal is achieved
     err = goal + 1
     iterations = 0
-    while goal_reached(goal, err):
+    while True:
         training_cycle(sets[1], network, alpha)
         err = test_cycle(sets[0], network)
         iterations += 1
