@@ -66,7 +66,7 @@ def func(image, network, alpha):
 
 def process_train_image(perceptron, image, number, alpha):
     out = perceptron.activation(image.array)
-    err = calc_error(number, image.label, out)
+    err = calc_error(number, int(image.label), out)
     perceptron.tune(create_tunes(image.array, alpha, err))
 
 
@@ -85,8 +85,8 @@ def test_cycle(images, network):
     abs_err = 0
     for i in images.flat:
         for p in network:
-            abs_err = abs_err + abs(process_test_image(network[p], i, int(p)))
-
+            abs_err += abs(process_test_image(network[p], i, int(p)))
+    print(abs_err)
     return abs_err
 
 
@@ -133,8 +133,8 @@ if __name__ == '__main__':
     #Set Parameters for training
     pixel_size = 784
     test_size = 0.20
-    alpha = 0.01
-    goal = 10
+    alpha = 0.5
+    goal = 300
 
     # Extract training images
     f = file_formatting(sys.argv[1])
