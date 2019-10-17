@@ -22,4 +22,5 @@ class Perceptron:
         self.weights = np.add(self.weights, tunes[1])
 
     def __sigmoid(self, x):
-        return (2 / (1 + math.exp(-x))) - 1
+        # return (2 / (1 + math.exp(-x))) - 1
+        return np.sign(x)

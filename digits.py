@@ -3,6 +3,7 @@ import numpy as np
 from image import Image
 from perceptron import Perceptron
 import operator
+import matplotlib.pyplot as plot
 
 
 def validate_arguments():
@@ -93,8 +94,8 @@ def process_test_image(perceptron, image, number):
     return calc_error(number, int(image.label), out)
 
 
-def goal_reached(goal, err):
-    return goal > err
+def goal_not_reached(goal, err):
+    return goal < err
 
 
 def file_creation(name, out):
@@ -130,9 +131,9 @@ if __name__ == '__main__':
 
     #Set Parameters for training
     pixel_size = 784
-    test_size = 0.20
+    test_size = 0.33
     alpha = 0.1
-    goal = 300
+    goal = 174
 
     # Extract training images
     f = file_formatting(sys.argv[1])
@@ -163,6 +164,7 @@ if __name__ == '__main__':
     # Iterate training until goal is achieved
     err = goal + 1
     iterations = 0
+    # while goal_not_reached(goal, err):
     while True:
         training_cycle(sets[1], network, alpha)
         err = test_cycle(sets[0], network)
