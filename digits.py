@@ -85,7 +85,7 @@ def test_cycle(images, network):
     for i in images.flat:
         for p in network:
             abs_err += abs(process_test_image(network[p], i, int(p)))
-    print(abs_err)
+    # print(abs_err)
     return abs_err
 
 
@@ -124,6 +124,104 @@ def validate_numbers(network, images):
         out.append((max(numb.items(), key=operator.itemgetter(1))[0]))
     return out
 
+def run(train, labels, val):
+
+    # if validate_arguments():
+    #     sys.exit()
+
+    #Set Parameters for training
+    pixel_size = 784
+    test_size = 0.25
+    alpha = 0.01
+    goal = 150
+
+    # Extract training images
+    f = file_formatting(train)
+
+    # Make image objects for all data
+    images = image_objecify(f)
+
+    # Close file reader
+    f.close()
+
+    # Open label file
+    l = file_formatting(labels)
+
+    # Add labels to all images
+    label_adding(images, l)
+
+    # Close file reader
+    l.close()
+
+    # Split images in two sets
+    sets = split_images(images, test_size)
+
+    # Initiate perceptrons
+    network = init_network(pixel_size)
+
+    # print('setup done')
+
+    # Iterate training until goal is achieved
+    err = goal + 1
+    iterations = 0
+
+    tempErrorList = []
+    localOptimal = []
+    getBackOnTrack = False
+    while goal_not_reached(goal, err):
+        # while True:
+        training_cycle(sets[1], network, alpha)
+        err = test_cycle(sets[0], network)
+        iterations += 1
+        tempErrorList.append(err)
+        if getBackOnTrack:
+            alpha = 0.01
+            getBackOnTrack = False
+        # print("ITERATION:", iterations)
+        # print("tempErrorList lenght:", len(tempErrorList))
+
+        if iterations > 3 and (
+                int(tempErrorList[iterations - 1]) == int(tempErrorList[iterations - 2])) and not getBackOnTrack:
+            if err < 180:
+                # print("ALPHA CHANGE")
+                alpha += 0.1
+                getBackOnTrack = True
+
+            if err < 160:
+                # print("ALPHA CHANGE")
+                alpha += 0.2
+                getBackOnTrack = True
+
+            """if err < 175 and (tempErrorList[iterations - 1] == tempErrorList[iterations - 2]):
+                print("ALPHA CHANGE")
+                alpha -= 0.6
+
+            if err < 150 and (tempErrorList[iterations -1] == tempErrorList[iterations - 2]):
+                print("ALPHA CHANGE")
+                alpha -= 0.6
+
+            if err < 125 and (tempErrorList[iterations -1] == tempErrorList[iterations - 2]):
+                print("ALPHA CHANGE")
+                alpha += 0.3"""
+
+
+    # label = 'test size: ' + str(test_size) + ' learning rate: ' + str(alpha)
+    # plot.plot(values)
+    # plot.title(label)
+    # plot.show()
+    # Import validating data
+    vf = file_formatting(val)
+
+    # Input to image objects
+    validate_images = image_objecify(vf)
+
+    # Run a validation cycle
+    out = validate_numbers(network, validate_images)
+
+    # Put answers in a file and then print it
+    file_creation('results.txt', out).close()
+    # print(out)
+
 if __name__ == '__main__':
 
     if validate_arguments():
@@ -131,9 +229,9 @@ if __name__ == '__main__':
 
     #Set Parameters for training
     pixel_size = 784
-    test_size = 0.33
-    alpha = 0.1
-    goal = 174
+    test_size = 0.25
+    alpha = 0.01
+    goal = 170
 
     # Extract training images
     f = file_formatting(sys.argv[1])
@@ -164,14 +262,21 @@ if __name__ == '__main__':
     # Iterate training until goal is achieved
     err = goal + 1
     iterations = 0
-    # while goal_not_reached(goal, err):
-    while True:
+    values = []
+    while goal_not_reached(goal, err):
+    # while True:
+    # for i in range(100):
         training_cycle(sets[1], network, alpha)
         err = test_cycle(sets[0], network)
         iterations += 1
+        values.append(err)
 
     print(iterations)
 
+    # label = 'test size: ' + str(test_size) + ' learning rate: ' + str(alpha)
+    # plot.plot(values)
+    # plot.title(label)
+    # plot.show()
     # Import validating data
     vf = file_formatting(sys.argv[3])
 

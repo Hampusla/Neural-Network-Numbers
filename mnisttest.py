@@ -1,13 +1,13 @@
 import sys
 
-def run():
+def run(result, valid):
     
-    if len(sys.argv) != 3:
-        print("Usage: python mnisttest <result label file> <validation label file>")
-        exit()
+    # if len(sys.argv) != 3:
+    #     print("Usage: python mnisttest <result label file> <validation label file>")
+    #     exit()
     
-    resultlabelfile = open(sys.argv[1])    
-    validationlabelfile = open(sys.argv[2])
+    resultlabelfile = open(result)
+    validationlabelfile = open(valid)
     
     validationlabelfile.readline()
     validationlabelfile.readline()
@@ -24,6 +24,7 @@ def run():
 
     p = ((100.0 * h) / nlabels)
     
-    print("Percentage of correct classifications: %4.1f %% out of %d images\n" % (p, nlabels))
+    # print("Percentage of correct classifications: %4.1f %% out of %d images\n" % (p, nlabels))
+    return p
     
-run()
+# run()
