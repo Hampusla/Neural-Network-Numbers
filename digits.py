@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from image import Image
-from per import Perceptron
+from perceptron import Perceptron
 import operator
 
 
