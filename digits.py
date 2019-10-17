@@ -180,17 +180,22 @@ def run(train, labels, val):
         # print("ITERATION:", iterations)
         # print("tempErrorList lenght:", len(tempErrorList))
 
+        # if err < 160:
+        #     # print("ALPHA CHANGE")
+        #     alpha -= 0.005
+        #     # getBackOnTrack = True
+
         if iterations > 3 and (
                 int(tempErrorList[iterations - 1]) == int(tempErrorList[iterations - 2])) and not getBackOnTrack:
-            if err < 180:
-                # print("ALPHA CHANGE")
-                alpha += 0.1
-                getBackOnTrack = True
+            # if err < 200:
+            #     # print("ALPHA CHANGE")
+            #     alpha += 0.1
+            #     getBackOnTrack = True
 
-            if err < 160:
-                # print("ALPHA CHANGE")
-                alpha += 0.2
-                getBackOnTrack = True
+            # if err < 160:
+            #     # print("ALPHA CHANGE")
+            #     alpha += 0.2
+            #     getBackOnTrack = True
 
             """if err < 175 and (tempErrorList[iterations - 1] == tempErrorList[iterations - 2]):
                 print("ALPHA CHANGE")
@@ -206,7 +211,7 @@ def run(train, labels, val):
 
 
     # label = 'test size: ' + str(test_size) + ' learning rate: ' + str(alpha)
-    # plot.plot(values)
+    # plot.plot(tempErrorList)
     # plot.title(label)
     # plot.show()
     # Import validating data
@@ -221,6 +226,7 @@ def run(train, labels, val):
     # Put answers in a file and then print it
     file_creation('results.txt', out).close()
     # print(out)
+    return tempErrorList
 
 if __name__ == '__main__':
 
@@ -231,7 +237,7 @@ if __name__ == '__main__':
     pixel_size = 784
     test_size = 0.25
     alpha = 0.01
-    goal = 170
+    goal = 145
 
     # Extract training images
     f = file_formatting(sys.argv[1])
@@ -262,14 +268,14 @@ if __name__ == '__main__':
     # Iterate training until goal is achieved
     err = goal + 1
     iterations = 0
-    values = []
+    # values = []
     while goal_not_reached(goal, err):
     # while True:
     # for i in range(100):
         training_cycle(sets[1], network, alpha)
         err = test_cycle(sets[0], network)
         iterations += 1
-        values.append(err)
+        # values.append(err)
 
     print(iterations)
 
