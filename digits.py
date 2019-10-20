@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from image import Image
-from perceptron import Perceptron
+from perceptron_node import Perceptron
 import operator
 import matplotlib.pyplot as plot
 
@@ -20,12 +20,12 @@ def validate_arguments():
 
 def file_formatting(file):
     f = open(file, 'r')
-
     return file_scrap(f)
 
 
 def image_objecify(file):
     return np.array([Image(file.readline().rstrip()) for i in range(1000)])
+
 
 def file_scrap(file):
     for x in range(3):
@@ -33,12 +33,13 @@ def file_scrap(file):
 
     return file
 
+
 def label_adding(images, file):
     [image.add_label(file.readline()) for image in images]
 
 
 def split_images(images, size):
-    indice = int(1000*size)
+    indice = int(1000 * size)
 
     # np.random.shuffle(images)
     return np.split(images, [indice, 1000])
@@ -52,6 +53,7 @@ def init_network(input_size):
         '9': Perceptron(input_size),
     }
 
+
 def training_cycle(images, network, alpha):
     np.random.shuffle(images)
     for i in images.flat:
@@ -59,25 +61,25 @@ def training_cycle(images, network, alpha):
             process_train_image(network[p], i, int(p), alpha)
 
 
-def func(image, network, alpha):
-    for p in network:
-        process_train_image(network[p], image, int(p), alpha)
-
 def process_train_image(perceptron, image, number, alpha):
     out = perceptron.activation(image.array)
     err = calc_error(number, int(image.label), out)
     perceptron.tune(create_tunes(image.array, alpha, err))
 
 
-def calc_error(num, image_num,guess):
+def calc_error(num, image_num, guess):
     if num == image_num:
-        return 1-guess
+        return 1 - guess
     else:
-        return -1-guess
+        return -1 - guess
 
 
 def create_tunes(inputs, alpha, error):
-    return [(alpha*error), (np.multiply(np.multiply(inputs, np.full(inputs.size, alpha)), np.full(inputs.size, error)))]
+    return [(alpha * error), create_weight_tunes(inputs, alpha, error)]
+
+
+def create_weight_tunes(inputs, alpha, error):
+    return np.multiply(np.multiply(inputs, np.full(inputs.size, alpha)), np.full(inputs.size, error))
 
 
 def test_cycle(images, network):
@@ -85,7 +87,6 @@ def test_cycle(images, network):
     for i in images.flat:
         for p in network:
             abs_err += abs(process_test_image(network[p], i, int(p)))
-    # print(abs_err)
     return abs_err
 
 
@@ -103,13 +104,11 @@ def file_creation(name, out):
 
     for s in out:
         f.write(str(s) + '\n')
-
     return f
 
 
 def validate_numbers(network, images):
     out = []
-
     for i in images:
         numb = {
             4: 0,
@@ -124,174 +123,57 @@ def validate_numbers(network, images):
         out.append((max(numb.items(), key=operator.itemgetter(1))[0]))
     return out
 
-def run(train, labels, val):
 
-    # if validate_arguments():
-    #     sys.exit()
+# -------- MAIN --------#
 
-    #Set Parameters for training
-    pixel_size = 784
-    test_size = 0.25
-    alpha = 0.01
-    goal = 150
+if validate_arguments():
+    sys.exit()
 
-    # Extract training images
-    f = file_formatting(train)
+# Set Parameters for training
+pixel_size = 784
+test_size = 0.20
+alpha = 0.01
+goal = 145
 
-    # Make image objects for all data
-    images = image_objecify(f)
+# Extract training images
+file_images = file_formatting(sys.argv[1])
 
-    # Close file reader
-    f.close()
+# Make image objects for all data
+images = image_objecify(file_images)
 
-    # Open label file
-    l = file_formatting(labels)
+# Close file reader
+file_images.close()
 
-    # Add labels to all images
-    label_adding(images, l)
+# Open label file
+file_labels = file_formatting(sys.argv[2])
 
-    # Close file reader
-    l.close()
+# Add labels to all images
+label_adding(images, file_labels)
 
-    # Split images in two sets
-    sets = split_images(images, test_size)
+# Close file reader
+file_labels.close()
 
-    # Initiate perceptrons
-    network = init_network(pixel_size)
+# Split images in two sets
+sets = split_images(images, test_size)
 
-    # print('setup done')
+# Initiate perceptrons
+network = init_network(pixel_size)
 
-    # Iterate training until goal is achieved
-    err = goal + 1
-    iterations = 0
+# Iterate training until goal is achieved
+err = goal + 1
+while goal_not_reached(goal, err):
+    training_cycle(sets[1], network, alpha)
+    err = test_cycle(sets[0], network)
 
-    tempErrorList = []
-    localOptimal = []
-    getBackOnTrack = False
-    while goal_not_reached(goal, err):
-        # while True:
-        training_cycle(sets[1], network, alpha)
-        err = test_cycle(sets[0], network)
-        iterations += 1
-        tempErrorList.append(err)
-        if getBackOnTrack:
-            alpha = 0.01
-            getBackOnTrack = False
-        # print("ITERATION:", iterations)
-        # print("tempErrorList lenght:", len(tempErrorList))
+# Open file with validation images
+file_validation = file_formatting(sys.argv[3])
 
-        # if err < 160:
-        #     # print("ALPHA CHANGE")
-        #     alpha -= 0.005
-        #     # getBackOnTrack = True
+# Input to image objects
+validate_images = image_objecify(file_validation)
 
-        if iterations > 3 and (
-                int(tempErrorList[iterations - 1]) == int(tempErrorList[iterations - 2])) and not getBackOnTrack:
-            # if err < 200:
-            #     # print("ALPHA CHANGE")
-            #     alpha += 0.1
-            #     getBackOnTrack = True
+# Run a validation cycle
+out = validate_numbers(network, validate_images)
 
-            # if err < 160:
-            #     # print("ALPHA CHANGE")
-            #     alpha += 0.2
-            #     getBackOnTrack = True
-
-            """if err < 175 and (tempErrorList[iterations - 1] == tempErrorList[iterations - 2]):
-                print("ALPHA CHANGE")
-                alpha -= 0.6
-
-            if err < 150 and (tempErrorList[iterations -1] == tempErrorList[iterations - 2]):
-                print("ALPHA CHANGE")
-                alpha -= 0.6
-
-            if err < 125 and (tempErrorList[iterations -1] == tempErrorList[iterations - 2]):
-                print("ALPHA CHANGE")
-                alpha += 0.3"""
-
-
-    # label = 'test size: ' + str(test_size) + ' learning rate: ' + str(alpha)
-    # plot.plot(tempErrorList)
-    # plot.title(label)
-    # plot.show()
-    # Import validating data
-    vf = file_formatting(val)
-
-    # Input to image objects
-    validate_images = image_objecify(vf)
-
-    # Run a validation cycle
-    out = validate_numbers(network, validate_images)
-
-    # Put answers in a file and then print it
-    file_creation('results.txt', out).close()
-    # print(out)
-    return tempErrorList
-
-if __name__ == '__main__':
-
-    if validate_arguments():
-        sys.exit()
-
-    #Set Parameters for training
-    pixel_size = 784
-    test_size = 0.25
-    alpha = 0.01
-    goal = 145
-
-    # Extract training images
-    f = file_formatting(sys.argv[1])
-
-    # Make image objects for all data
-    images = image_objecify(f)
-
-    # Close file reader
-    f.close()
-
-    # Open label file
-    l = file_formatting(sys.argv[2])
-
-    # Add labels to all images
-    label_adding(images, l)
-
-    # Close file reader
-    l.close()
-
-    # Split images in two sets
-    sets = split_images(images, test_size)
-
-    # Initiate perceptrons
-    network = init_network(pixel_size)
-
-    print('setup done')
-
-    # Iterate training until goal is achieved
-    err = goal + 1
-    iterations = 0
-    # values = []
-    while goal_not_reached(goal, err):
-    # while True:
-    # for i in range(100):
-        training_cycle(sets[1], network, alpha)
-        err = test_cycle(sets[0], network)
-        iterations += 1
-        # values.append(err)
-
-    print(iterations)
-
-    # label = 'test size: ' + str(test_size) + ' learning rate: ' + str(alpha)
-    # plot.plot(values)
-    # plot.title(label)
-    # plot.show()
-    # Import validating data
-    vf = file_formatting(sys.argv[3])
-
-    # Input to image objects
-    validate_images = image_objecify(vf)
-
-    # Run a validation cycle
-    out = validate_numbers(network, validate_images)
-
-    # Put answers in a file and then print it
-    file_creation('results.txt', out).close()
-    print(out)
+# Put answers in a file and then print it
+file_creation('results.txt', out).close()
+print(out)

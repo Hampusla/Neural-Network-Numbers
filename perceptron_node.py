@@ -13,7 +13,7 @@ class Perceptron:
         n = inputs @ self.weights
 
         # Sigmoid
-        out = self.__sigmoid(n + self.bias)
+        out = self.__function(n + self.bias)
 
         return out
 
@@ -21,7 +21,5 @@ class Perceptron:
         self.bias += tunes[0]
         self.weights = np.add(self.weights, tunes[1])
 
-    def __sigmoid(self, x):
-        # return (2 / (1 + math.exp(-x))) - 1
-        # return np.sign(x)
+    def __function(self, x):
         return math.tanh(x)
