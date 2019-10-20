@@ -1,9 +1,16 @@
 import sys
 import numpy as np
+import operator
 from image import Image
 from perceptron_node import Perceptron
-import operator
-import matplotlib.pyplot as plot
+
+"""Trains four perceptrons on number images then classify new images
+
+Using images of hand drawn numbers (4,7,8,9) to train four separate perceptrons,
+each classifying different numbers. After reaching an absolute error of 145 it is done.
+After it tries to classify new images and then print the guesses.
+
+"""
 
 
 def validate_arguments():
@@ -99,12 +106,9 @@ def goal_not_reached(goal, err):
     return goal < err
 
 
-def file_creation(name, out):
-    f = open(name, 'w')
-
+def output_creation(out):
     for s in out:
-        f.write(str(s) + '\n')
-    return f
+        print(str(s))
 
 
 def validate_numbers(network, images):
@@ -172,8 +176,7 @@ file_validation = file_formatting(sys.argv[3])
 validate_images = image_objecify(file_validation)
 
 # Run a validation cycle
-out = validate_numbers(network, validate_images)
+labels = validate_numbers(network, validate_images)
 
-# Put answers in a file and then print it
-file_creation('results.txt', out).close()
-print(out)
+# Print answers
+output_creation(labels)
