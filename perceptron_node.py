@@ -5,10 +5,10 @@ import numpy as np
 
 
 class Perceptron:
-    """
-    An class which simulate a neurons behavior
+    """ An class which simulate a neurons behavior
 
-    ...
+    Gives a scalar output given many inputs. This output is dependent on the inputs and corresponding weights
+    and a bias. The weights and bias are updated given tunings.
 
     Attributes:
         weights: values which are connected to inputs

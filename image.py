@@ -5,8 +5,6 @@ class Image:
     """
         An class which contains images information
 
-        ...
-
         Attributes:
             array: pixel values scaled between 0-1
             label: Number which image represent
