@@ -29,7 +29,7 @@ class Perceptron:
         """ Takes a numpy array and output a value between -1 and 1
 
         Do dot product multiplication between inputs and weights.
-        Get a output value by appying a tanh function on the dot product and bias added together.
+        Get a output value by applying a tanh function on the dot product and bias added together.
 
         Args:
             inputs: numpy array of values
